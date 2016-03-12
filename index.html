@@ -34,8 +34,29 @@
           zoom: 3
         });
       }
+
+      // TODO: inject configuration variables with gulp in a build step
+      var config = (function() {
+        var xhr = new XMLHttpRequest();
+        var config = "config/production.json";
+        if (document.location.hostname == "localhost") {
+          config = "config/local.json";
+        }
+        xhr.open("GET", config, false);
+        xhr.send();
+        return JSON.parse(xhr.responseText);
+      })();
+
+      console.log('config:', config);
+
+      (function () {
+        var s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.async = true;
+        s.src = 'https://maps.googleapis.com/maps/api/js?key='+config.maps_key+'&callback=initMap';
+        var x = document.getElementsByTagName('script')[0];
+        x.parentNode.insertBefore(s, x);
+      })();
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpdghw8S49HwrZHQtELjqkIp6Yn-IP1TM&callback=initMap"
-    async defer></script>
   </body>
 </html>
